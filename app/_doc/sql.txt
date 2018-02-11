@@ -1,0 +1,208 @@
+
+utworzenie tabeli jak szybko
+
+create table products
+
+
+CREATE DATABASE tania;
+
+use tania;
+
+CREATE TABLE users (
+	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	firstname VARCHAR(30) NOT NULL,
+	lastname VARCHAR(30) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	age INT(3),
+	location VARCHAR(50),
+	date TIMESTAMP
+);
+
+
+
+
+
+INSERT INTO `products` (`id`, `name`, `details`, `created_at`, `updated_at`) VALUES
+
+(1, 'Product A', 'Product A Details', NULL, NULL),
+
+(3, 'Product C', 'Product C Details', NULL, NULL),
+
+(4, 'Product D', 'Product D Details', NULL, NULL),
+
+(5, 'Product E', 'Product E Details', NULL, NULL),
+
+(6, 'Product F', 'Product F Details', NULL, NULL);
+
+---
+
+https://tutorials.kode-blog.com/laravel-5-faker-tutorial
+
+php artisan make:migration create_customers_table
+
+
+public function up()
+    {
+        Schema::create('customers', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('contact_number');
+            $table->timestamps();
+        });
+    }
+
+
+php artisan migrate
+
+php artisan make:seeder CustomersTableSeeder
+
+
+
+public function run()
+    {
+        $faker = Faker\Factory::create();
+
+        $limit = 3333;
+
+        for ($i = 0; $i < $limit; $i++) {
+            DB::table('customers')->insert([ //,
+                'name' => $faker->name,
+                'email' => $faker->unique()->email,
+                'contact_number' => $faker->phoneNumber,
+            ]);
+        }
+    }
+
+
+
+php artisan db:seed --class=CustomersTableSeeder    
+
+---
+
+to jest ta sama tabela
+
+php artisan make:migration create_products_table
+
+
+
+public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('details');
+            $table->timestamps();
+        });
+    }
+
+
+php artisan migrate
+
+php artisan make:seeder ProductsTableSeeder
+
+
+
+public function run()
+    {
+        $faker = Faker\Factory::create();
+
+        $limit = 3333;
+
+        for ($i = 0; $i < $limit; $i++) {
+            DB::table('products')->insert([ //,
+                'name' => $faker->name,
+                'details' => $faker->company,
+                //'contact_number' => $faker->phoneNumber,
+                //nie wiem czy to działa
+                //'title' => $faker->sentence,
+                //'description' => $faker->paragraph
+
+            ]);
+        }
+    }
+
+
+
+php artisan db:seed --class=ProductsTableSeeder
+
+//nie wiem czy to działa
+//'title' => $faker->sentence,
+//'description' => $faker->paragraph
+
+
+uwaga na górze NAMESPACE DEKLARACJA
+
+use Carbon\Carbon; 
+
+ 'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                        //'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+---
+
+takze to dziala
+
+<?php
+
+use Illuminate\Database\Seeder;
+use Carbon\Carbon; 
+
+class ProductsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker\Factory::create();
+        
+                $limit = 333;
+        
+                for ($i = 0; $i < $limit; $i++) {
+                    DB::table('products')->insert([ //,
+
+                        'name' => $faker->sentence,
+                        'details' => $faker->paragraph,
+                        //'name' => $faker->name,
+                        //'details' => $faker->company,
+                        //'contact_number' => $faker->phoneNumber,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                        //'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    ]);
+                }
+    }
+}
+
+
+
+
+---
+gdzie jest ten seeder userów
+
+https://scotch.io/tutorials/tinker-with-the-data-in-your-laravel-apps-with-php-artisan-tinker
+
+
+
+php artisan tinker
+
+factory(App\User::class, 10)->create();
+
+App\User::all();
+
+App\User::count();
+
+$user = App\User::find(1);
+$user->delete();
+
+--------------
+
+composer dump-autoload
+php artisan db:seed
+
+php artisan migrate:refresh --seed
+
+
+---
